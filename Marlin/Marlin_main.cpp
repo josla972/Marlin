@@ -934,10 +934,10 @@ static void run_z_probe() {
     plan_set_position(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS]);
 }
 
-static void do_blocking_move_to(float x, float y, float z) {
+static void do_blocking_move_to(float x, float y, float z, float new_feedrate) {
     float oldFeedRate = feedrate;
 
-    feedrate = XY_TRAVEL_SPEED;
+    feedrate = new_feedrate;
 
     current_position[X_AXIS] = x;
     current_position[Y_AXIS] = y;
@@ -949,7 +949,7 @@ static void do_blocking_move_to(float x, float y, float z) {
 }
 
 static void do_blocking_move_relative(float offset_x, float offset_y, float offset_z) {
-    do_blocking_move_to(current_position[X_AXIS] + offset_x, current_position[Y_AXIS] + offset_y, current_position[Z_AXIS] + offset_z);
+    do_blocking_move_to(current_position[X_AXIS] + offset_x, current_position[Y_AXIS] + offset_y, current_position[Z_AXIS] + offset_z, feedrate);
 }
 
 static void setup_for_endstop_move() {
@@ -1006,8 +1006,8 @@ static void retract_z_probe() {
 /// Probe bed height at position (x,y), returns the measured z value
 static float probe_pt(float x, float y, float z_before) {
   // move to right place
-  do_blocking_move_to(current_position[X_AXIS], current_position[Y_AXIS], z_before);
-  do_blocking_move_to(x - X_PROBE_OFFSET_FROM_EXTRUDER, y - Y_PROBE_OFFSET_FROM_EXTRUDER, current_position[Z_AXIS]);
+  do_blocking_move_to(current_position[X_AXIS], current_position[Y_AXIS], z_before, feedrate);
+  do_blocking_move_to(x - X_PROBE_OFFSET_FROM_EXTRUDER, y - Y_PROBE_OFFSET_FROM_EXTRUDER, current_position[Z_AXIS], feedrate);
 
   engage_z_probe();   // Engage Z Servo endstop if available
   run_z_probe();
@@ -1364,7 +1364,8 @@ void process_commands()
             destination[X_AXIS] = round(Z_SAFE_HOMING_X_POINT - X_PROBE_OFFSET_FROM_EXTRUDER);
             destination[Y_AXIS] = round(Z_SAFE_HOMING_Y_POINT - Y_PROBE_OFFSET_FROM_EXTRUDER);
             destination[Z_AXIS] = Z_RAISE_BEFORE_HOMING * home_dir(Z_AXIS) * (-1);    // Set destination away from bed
-            feedrate = XY_TRAVEL_SPEED;
+           // feedrate = XY_TRAVEL_SPEED;
+    	    feedrate = homing_feedrate[Z_AXIS];
             current_position[Z_AXIS] = 0;
 
             plan_set_position(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS]);
