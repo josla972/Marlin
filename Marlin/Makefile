@@ -37,14 +37,16 @@
 # from the commandline with "make HARDWARE_MOTHERBOARD=71" for example
 
 # This defined the board you are compiling for (see Configuration.h for the options)
-HARDWARE_MOTHERBOARD ?= 11
+HARDWARE_MOTHERBOARD ?= 81
 
 # Arduino source install directory, and version number
-ARDUINO_INSTALL_DIR  ?= /Applications/Arduino.app/Contents/Resources/Java
-ARDUINO_VERSION      ?= 105
+ARDUINO_INSTALL_DIR  ?= /Applications/Arduino.app/Contents/Resources/Java/
+ARDUINO_INSTALL_DIR ?= ...
+ARDUINO_VERSION ?= 105
 
 # You can optionally set a path to the avr-gcc tools. Requires a trailing slash. (ex: /usr/local/avr-gcc/bin)
-AVR_TOOLS_PATH ?=
+AVR_TOOLS_PATH ?= /usr/x86_64-pc-linux-gnu/avr/gcc-bin/4.8.2/
+#/Applications/Arduino.app/Contents/Resources/Java/hardware/tools/avr/bin/
 
 #Programmer configuration
 UPLOAD_RATE        ?= 115200
@@ -137,13 +139,13 @@ MCU              ?= atmega1280
 
 #Teensylu
 else ifeq  ($(HARDWARE_MOTHERBOARD),8)
-HARDWARE_VARIANT ?= Teensy
+HARDWARE_VARIANT ?= teensy
 MCU              ?= at90usb1286
 else ifeq  ($(HARDWARE_MOTHERBOARD),81)
-HARDWARE_VARIANT ?= Teensy
+HARDWARE_VARIANT ?= teensy
 MCU              ?= at90usb1286
 else ifeq  ($(HARDWARE_MOTHERBOARD),82)
-HARDWARE_VARIANT ?= Teensy
+HARDWARE_VARIANT ?= teensy
 MCU              ?= at90usb646
 else ifeq  ($(HARDWARE_MOTHERBOARD),83)
 HARDWARE_VARIANT ?= Teensy
@@ -206,6 +208,7 @@ HARDWARE_DIR = ../ArduinoAddons/Arduino_0.xx
 endif
 endif
 HARDWARE_SRC = $(HARDWARE_DIR)/$(HARDWARE_VARIANT)/cores/arduino
+HARDWARE_SRC = $(HARDWARE_DIR)/$(HARDWARE_VARIANT)/cores/teensy
 
 TARGET = $(notdir $(CURDIR))
 
@@ -252,7 +255,7 @@ SRC = wiring.c \
 	wiring_analog.c wiring_digital.c \
 	wiring_pulse.c \
 	wiring_shift.c WInterrupts.c
-ifeq ($(HARDWARE_VARIANT), Teensy)
+ifeq ($(HARDWARE_VARIANT), teensy)
 SRC = wiring.c
 VPATH += $(ARDUINO_INSTALL_DIR)/hardware/teensy/cores/teensy
 endif
@@ -311,7 +314,7 @@ MV = mv -f
 CDEFS    = -DF_CPU=$(F_CPU) ${addprefix -D , $(DEFINES)}
 CXXDEFS  = $(CDEFS)
 
-ifeq ($(HARDWARE_VARIANT), Teensy)
+ifeq ($(HARDWARE_VARIANT), teensy)
 CDEFS  += -DUSB_SERIAL
 SRC    += usb.c pins_teensy.c
 CXXSRC += usb_api.cpp
@@ -328,8 +331,8 @@ CXXINCS = ${addprefix -I ,${VPATH}}
 # gnu99 - c99 plus GCC extensions
 #CSTANDARD = -std=gnu99
 CDEBUG = -g$(DEBUG)
-CWARN = -Wall -Wstrict-prototypes
-CTUNING = -funsigned-char -funsigned-bitfields -fpack-struct \
+CWARN = -Wall -Wstrict-prototypes 
+CTUNING = -pipe -O2 -funsigned-char -funsigned-bitfields -fpack-struct \
 	-fshort-enums -w -ffunction-sections -fdata-sections \
 	-DARDUINO=$(ARDUINO_VERSION)
 ifneq ($(HARDWARE_MOTHERBOARD),)
