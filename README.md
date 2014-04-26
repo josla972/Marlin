@@ -17,6 +17,9 @@ A fork by bkubicek for the Ultimaker was merged, and further development was aid
 Some features have been added by:
 Lampmaker, Bradley Feldman, and others...
 
+About my fork
+===================
+I use x86_64 Gentoo Linux and I build my Printrboard firmware with make. It goes pretty fast with make -j5 :). I might add some special auto bed leveling functionality later on as well.
 
 Features:
 =========
