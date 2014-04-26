@@ -1586,7 +1586,8 @@
 #define HEATER_1_PIN       -1
 #define HEATER_2_PIN       -1
 #define HEATER_BED_PIN     20  // Bed
-#define FAN_PIN            22  // Fan
+#define FAN_PIN            16 // 22  // Fan
+//https://labitat.dk/wiki/Panelolu_and_Printrboard_the_easy_way
 // You may need to change FAN_PIN to 16 because Marlin isn't using fastio.h
 // for the fan and Teensyduino uses a different pin mapping.
 
@@ -1600,6 +1601,7 @@
   #define X_STOP_PIN         35
   #define Y_STOP_PIN          8
   #define Z_STOP_PIN         36
+  #define Z_PROBE_MIN_PIN    37  // E-stop-pin - Leveling probe - We pull this high (5V)
   #define TEMP_0_PIN          1  // Extruder / Analog pin numbering
   #define TEMP_BED_PIN        0  // Bed / Analog pin numbering
 #endif

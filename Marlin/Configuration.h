@@ -72,7 +72,7 @@
 // 21 = Elefu Ra Board (v3)
 
 #ifndef MOTHERBOARD
-#define MOTHERBOARD 7
+#define MOTHERBOARD 81
 #endif
 
 // Define this to set a custom name for your generic Mendel,
@@ -130,14 +130,12 @@
 // 147 is Pt100 with 4k7 pullup
 // 110 is Pt100 with 1k pullup (non standard)
 
-#define TEMP_SENSOR_0 -1
-#define TEMP_SENSOR_1 -1
+//#define TEMP_SENSOR_0 5 // Old J-headstyle thermistor 
+//#define TEMP_SENSOR_0 1 // Buda thermistor 
+#define TEMP_SENSOR_0 7 // Buda thermistor 
+#define TEMP_SENSOR_1 0
 #define TEMP_SENSOR_2 0
-#define TEMP_SENSOR_BED 0
-
-// This makes temp sensor 1 a redundant sensor for sensor 0. If the temperatures difference between these sensors is to high the print will be aborted.
-//#define TEMP_SENSOR_1_AS_REDUNDANT
-#define MAX_REDUNDANT_TEMP_SENSOR_DIFF 10
+#define TEMP_SENSOR_BED 1
 
 // Actual temperature must be close to target for this long before M109 returns success
 #define TEMP_RESIDENCY_TIME 10  // (seconds)
@@ -155,10 +153,10 @@
 // When temperature exceeds max temp, your heater will be switched off.
 // This feature exists to protect your hotend from overheating accidentally, but *NOT* from thermistor short/failure!
 // You should use MINTEMP for thermistor short/failure protection.
-#define HEATER_0_MAXTEMP 275
-#define HEATER_1_MAXTEMP 275
-#define HEATER_2_MAXTEMP 275
-#define BED_MAXTEMP 150
+#define HEATER_0_MAXTEMP 250 
+#define HEATER_1_MAXTEMP 250 
+#define HEATER_2_MAXTEMP 250 
+#define BED_MAXTEMP 130
 
 // If your bed has low resistance e.g. .6 ohm and throws the fuse you can duty cycle it to reduce the
 // average current. The value should be an integer and the heat bed will be turned on for 1 interval of
@@ -198,6 +196,15 @@
 //    #define  DEFAULT_Kp 63.0
 //    #define  DEFAULT_Ki 2.25
 //    #define  DEFAULT_Kd 440
+//    Buda
+//#define DEFAULT_Kp 47
+//#define DEFAULT_Ki 3.5
+//#define DEFAULT_Kd 425
+
+// E3d
+#define DEFAULT_Kp 8.04
+#define DEFAULT_Ki 0.37
+#define DEFAULT_Kd 43.34
 #endif // PIDTEMP
 
 // Bed Temperature Control
@@ -244,7 +251,7 @@
 //if PREVENT_DANGEROUS_EXTRUDE is on, you can still disable (uncomment) very long bits of extrusion separately.
 #define PREVENT_LENGTHY_EXTRUDE
 
-#define EXTRUDE_MINTEMP 170
+#define EXTRUDE_MINTEMP 145
 #define EXTRUDE_MAXLENGTH (X_MAX_LENGTH+Y_MAX_LENGTH) //prevent extrusion of very large distances.
 
 //===========================================================================
@@ -277,12 +284,13 @@
 #endif
 
 // The pullups are needed if you directly connect a mechanical endswitch between the signal and ground pins.
-const bool X_MIN_ENDSTOP_INVERTING = true; // set to true to invert the logic of the endstop.
-const bool Y_MIN_ENDSTOP_INVERTING = true; // set to true to invert the logic of the endstop.
-const bool Z_MIN_ENDSTOP_INVERTING = true; // set to true to invert the logic of the endstop.
-const bool X_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of the endstop.
-const bool Y_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of the endstop.
-const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of the endstop.
+const bool X_MIN_ENDSTOP_INVERTING = false; // set to true to invert the logic of the endstop.
+const bool Y_MIN_ENDSTOP_INVERTING = false; // set to true to invert the logic of the endstop.
+const bool Z_MIN_ENDSTOP_INVERTING = false; // set to true to invert the logic of the endstop.
+const bool Z_PROBE_MIN_ENDSTOP_INVERTING = true; // set to true to invert the logic of the endstop.
+const bool X_MAX_ENDSTOP_INVERTING = false; // set to true to invert the logic of the endstop.
+const bool Y_MAX_ENDSTOP_INVERTING = false; // set to true to invert the logic of the endstop.
+const bool Z_MAX_ENDSTOP_INVERTING = false; // set to true to invert the logic of the endstop.
 //#define DISABLE_MAX_ENDSTOPS
 //#define DISABLE_MIN_ENDSTOPS
 
@@ -303,9 +311,9 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
 #define DISABLE_Z false
 #define DISABLE_E false // For all extruders
 
-#define INVERT_X_DIR true    // for Mendel set to false, for Orca set to true
-#define INVERT_Y_DIR false    // for Mendel set to true, for Orca set to false
-#define INVERT_Z_DIR true     // for Mendel set to false, for Orca set to true
+#define INVERT_X_DIR false    // for Mendel set to false, for Orca set to true
+#define INVERT_Y_DIR true    // for Mendel set to true, for Orca set to false
+#define INVERT_Z_DIR false     // for Mendel set to false, for Orca set to true
 #define INVERT_E0_DIR false   // for direct drive extruder v9 set to true, for geared extruder set to false
 #define INVERT_E1_DIR false    // for direct drive extruder v9 set to true, for geared extruder set to false
 #define INVERT_E2_DIR false   // for direct drive extruder v9 set to true, for geared extruder set to false
@@ -320,11 +328,11 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
 #define max_software_endstops true  // If true, axis won't move to coordinates greater than the defined lengths below.
 
 // Travel limits after homing
-#define X_MAX_POS 205
+#define X_MAX_POS 180
 #define X_MIN_POS 0
-#define Y_MAX_POS 205
+#define Y_MAX_POS 180
 #define Y_MIN_POS 0
-#define Z_MAX_POS 200
+#define Z_MAX_POS 100
 #define Z_MIN_POS 0
 
 #define X_MAX_LENGTH (X_MAX_POS - X_MIN_POS)
@@ -332,7 +340,7 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
 #define Z_MAX_LENGTH (Z_MAX_POS - Z_MIN_POS)
 //============================= Bed Auto Leveling ===========================
 
-//#define ENABLE_AUTO_BED_LEVELING // Delete the comment to enable (remove // at the start of the line)
+#define ENABLE_AUTO_BED_LEVELING // Delete the comment to enable (remove // at the start of the line)
 
 #ifdef ENABLE_AUTO_BED_LEVELING
 
@@ -436,14 +444,36 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
 #define NUM_AXIS 4 // The axis order in all axis related arrays is X, Y, Z, E
 #define HOMING_FEEDRATE {50*60, 50*60, 4*60, 0}  // set the homing speeds (mm/min)
 
-// default settings
+// default settings 
+//===========================================================================
+//===========================CALIBRATION PARAMETERS==========================
+//===========================================================================
+// Formula for X and Y steps per mm = [(Number of Motor Steps per Revolution)*(1/(microstepping ratio)]/(BeltPitch*ToothCount)
+// Formula for Z steps per mm = (Motor Steps per revolution)*(1/(microstepping ratio)/(Vertical Movement per revolution)    where Vert. Movement per revolution = 1.25mm for directly driven M8 rods on Prusa
+// Formula for Extruder steps per mm = [(PackingDensity)*(Number of Motor Steps per Revolution)*(Gear Ratio of Extruder)*(1/(microstepping ratio)]/(pi*(Diamter of Hobbed Bolt or Pinch Wheel))
+//      -Equation based on: http://www.brokentoaster.com/blog/?p=358 and http://hydraraptor.blogspot.com/2011/03/spot-on-flow-rate.html
+//      -The term ((NozzleDiameter^2)/(ExtrudedFilamentDiamter^2) from the above articles is consolidated to the term "PackingDensity"
+// INSTRUCTIONS: ENTER PARAMETERS BELOW FOR YOUR EQUIPMENT.
+#define MICROSTEPPING_RATIO 0.0625  // Enter microstepping ratio of electronics. Printrboard and Pololu = 1/16, Gen6 = 1/8, etc.
+#define XY_MTR_STPS 200      		// Enter number of steps per one revolution of the X and Y motors. See motor datasheet, 1.8degree = 200 steps, 0.9degree = 400 steps
+#define Z_MTR_STPS 200      		// Enter number of steps per one revolution of the Z motor(s).
+#define EXTRUDER_MTR_STPS 200      	// Enter number of steps per one revolution of the extruder motor.
 
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {78.7402,78.7402,200.0*8/3,760*1.1}  // default steps per unit for Ultimaker
-#define DEFAULT_MAX_FEEDRATE          {500, 500, 5, 25}    // (mm/sec)
-#define DEFAULT_MAX_ACCELERATION      {9000,9000,100,10000}    // X, Y, Z, E maximum start speed for accelerated moves. E default values are good for Skeinforge 40+, for older versions raise them a lot.
+#define PACKING_DENSITY 1.0        	// Leave at 1.0 and adjust in Skeinforge 40+. Alternatively, leave at 1.0 in Skeinforge and calculate manually: Packing_Density = (NozzleDiameter^2)/(Measured_Extruded_Filament_Diamter^2)
+#define BOLT_DIAMETER 7.00         	// Enter measured diameter of hobbed bolt or pinch wheel
+#define EXTRUDER_GEAR_RATIO 47/9  	// Enter gear ratio of extruder. Wade's Extruder: 39/11, Accessible Wade's by Greg Frost: 43/10, Adrian's Extruder: 59/11, etc.
 
-#define DEFAULT_ACCELERATION          3000    // X, Y, Z and E max acceleration in mm/s^2 for printing moves
-#define DEFAULT_RETRACT_ACCELERATION  3000   // X, Y, Z and E max acceleration in mm/s^2 for retracts
+#define BELT_PITCH 5.0				// Enter pitch of X and Y belts in millimeters (space from tooth to tooth). XL belts = 5.08mm
+#define GEAR_TEETH 12				// Enter number of teeth on X and Y gears
+#define Z_ROD_PITCH	1.25			// Enter pitch of Z rods in millimeters. Pitch = 1.25mm for directly driven M8 rods.
+
+#define PI 3.14159265359
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {((XY_MTR_STPS/MICROSTEPPING_RATIO)/(BELT_PITCH*GEAR_TEETH)), ((XY_MTR_STPS/MICROSTEPPING_RATIO)/(BELT_PITCH*GEAR_TEETH)), ((Z_MTR_STPS/MICROSTEPPING_RATIO)/Z_ROD_PITCH),((PACKING_DENSITY*EXTRUDER_MTR_STPS*EXTRUDER_GEAR_RATIO*(1/MICROSTEPPING_RATIO))/(PI*BOLT_DIAMETER))}
+#define DEFAULT_MAX_FEEDRATE          {500, 500, 5, 45}    // (mm/sec)    
+#define DEFAULT_MAX_ACCELERATION      {9000,7000,100,10000}    // X, Y, Z, E maximum start speed for accelerated moves. E default values are good for skeinforge 40+, for older versions raise them a lot.
+
+#define DEFAULT_ACCELERATION          2000    // X, Y, Z and E max acceleration in mm/s^2 for printing moves 
+#define DEFAULT_RETRACT_ACCELERATION  3000   // X, Y, Z and E max acceleration in mm/s^2 for r retracts
 
 // Offset of the extruders (uncomment if using more than one and relying on firmware to position when changing).
 // The offset has to be X=0, Y=0 for the extruder 0 hotend (default extruder).
