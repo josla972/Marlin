@@ -1007,7 +1007,7 @@ static void retract_z_probe() {
 static float probe_pt(float x, float y, float z_before) {
   // move to right place
   do_blocking_move_to(current_position[X_AXIS], current_position[Y_AXIS], z_before, feedrate);
-  do_blocking_move_to(x - X_PROBE_OFFSET_FROM_EXTRUDER, y - Y_PROBE_OFFSET_FROM_EXTRUDER, current_position[Z_AXIS], feedrate);
+  do_blocking_move_to(x - X_PROBE_OFFSET_FROM_EXTRUDER, y - Y_PROBE_OFFSET_FROM_EXTRUDER, current_position[Z_AXIS], XY_TRAVEL_SPEED);
 
   engage_z_probe();   // Engage Z Servo endstop if available
   run_z_probe();
