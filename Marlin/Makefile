@@ -41,6 +41,7 @@ HARDWARE_MOTHERBOARD ?= 81
 
 # Arduino source install directory, and version number
 #ARDUINO_INSTALL_DIR  ?= /Applications/Arduino.app/Contents/Resources/Java/
+ARDUINO_INSTALL_DIR  ?= ../../../../Downloads/arduino-1.0.5
 ARDUINO_VERSION ?= 105
 
 # You can optionally set a path to the avr-gcc tools. Requires a trailing slash. (ex: /usr/local/avr-gcc/bin)
@@ -258,7 +259,7 @@ CXXSRC = WMath.cpp WString.cpp Print.cpp Marlin_main.cpp	\
 	SdFile.cpp SdVolume.cpp motion_control.cpp planner.cpp		\
 	stepper.cpp temperature.cpp cardreader.cpp ConfigurationStore.cpp \
 	watchdog.cpp SPI.cpp Servo.cpp Tone.cpp ultralcd.cpp digipot_mcp4451.cpp \
-	vector_3.cpp qr_solve.cpp
+	vector_3.cpp qr_solve.cpp bedleveling.cpp
 ifeq ($(LIQUID_TWI2), 0)
 CXXSRC += LiquidCrystal.cpp
 else
