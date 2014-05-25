@@ -47,6 +47,7 @@
 #include "language.h"
 #include "pins_arduino.h"
 #include "math.h"
+#include "bedleveling.h"
 
 #ifdef BLINKM
 #include "BlinkM.h"
@@ -934,10 +935,10 @@ static void run_z_probe() {
     plan_set_position(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS]);
 }
 
-static void do_blocking_move_to(float x, float y, float z) {
+static void do_blocking_move_to(float x, float y, float z, float new_feedrate) {
     float oldFeedRate = feedrate;
 
-    feedrate = XY_TRAVEL_SPEED;
+    feedrate = new_feedrate;
 
     current_position[X_AXIS] = x;
     current_position[Y_AXIS] = y;
@@ -949,7 +950,7 @@ static void do_blocking_move_to(float x, float y, float z) {
 }
 
 static void do_blocking_move_relative(float offset_x, float offset_y, float offset_z) {
-    do_blocking_move_to(current_position[X_AXIS] + offset_x, current_position[Y_AXIS] + offset_y, current_position[Z_AXIS] + offset_z);
+    do_blocking_move_to(current_position[X_AXIS] + offset_x, current_position[Y_AXIS] + offset_y, current_position[Z_AXIS] + offset_z, feedrate);
 }
 
 static void setup_for_endstop_move() {
@@ -1006,8 +1007,8 @@ static void retract_z_probe() {
 /// Probe bed height at position (x,y), returns the measured z value
 static float probe_pt(float x, float y, float z_before) {
   // move to right place
-  do_blocking_move_to(current_position[X_AXIS], current_position[Y_AXIS], z_before);
-  do_blocking_move_to(x - X_PROBE_OFFSET_FROM_EXTRUDER, y - Y_PROBE_OFFSET_FROM_EXTRUDER, current_position[Z_AXIS]);
+  do_blocking_move_to(current_position[X_AXIS], current_position[Y_AXIS], z_before, feedrate);
+  do_blocking_move_to(x - X_PROBE_OFFSET_FROM_EXTRUDER, y - Y_PROBE_OFFSET_FROM_EXTRUDER, current_position[Z_AXIS], XY_TRAVEL_SPEED);
 
   engage_z_probe();   // Engage Z Servo endstop if available
   run_z_probe();
@@ -1526,6 +1527,7 @@ void process_commands()
 
             // solve lsq problem
             double *plane_equation_coefficients = qr_solve(AUTO_BED_LEVELING_GRID_POINTS*AUTO_BED_LEVELING_GRID_POINTS, 3, eqnAMatrix, eqnBVector);
+		    double z_variance = calculate_z_variance(plane_equation_coefficients, eqnAMatrix, eqnBVector);
 
             SERIAL_PROTOCOLPGM("Eqn coefficients: a: ");
             SERIAL_PROTOCOL(plane_equation_coefficients[0]);
@@ -1533,7 +1535,15 @@ void process_commands()
             SERIAL_PROTOCOL(plane_equation_coefficients[1]);
             SERIAL_PROTOCOLPGM(" d: ");
             SERIAL_PROTOCOLLN(plane_equation_coefficients[2]);
-
+            SERIAL_PROTOCOLPGM("Variance of Z: ");
+	    // If z has a standard devation sigma = LH, where LH is your layer height, you can expect the nozzle to hit the print surface 15.865 % of the time.
+	    // if sigma = 1/2*LH, 2.275 % of the time
+	    // if sigma = 1/3*LH, 0.135 % of the time
+	    // if sigma = 1/4*LH, 0.003 % of the time
+	    // I would therefore recommend a sigma smaller than 1/4*LH, meaning you can expect the nozzle to hit the print surface not more than once every 33333 prints.
+            SERIAL_PROTOCOLLN(z_variance);
+            SERIAL_PROTOCOLPGM("Standard deviation of Z (if this is greater than 1/4*layer_height. I would recommend you to not start printing.: ");
+            SERIAL_PROTOCOLLN(sqrt(z_variance));
 
             set_bed_level_equation_lsq(plane_equation_coefficients);
 
