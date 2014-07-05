@@ -224,6 +224,10 @@ extern int fanSpeed;
 extern int ValvePressure;
 extern int EtoPPressure;
 #endif
+#if NUM_SERVOS > 0
+void engage_z_probe();
+void retract_z_probe(); 
+#endif
 
 #ifdef FAN_SOFT_PWM
 extern unsigned char fanSpeedSoftPwm;

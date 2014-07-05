@@ -12,4 +12,13 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
  */
-double calculate_z_variance(double *plane_equation_coefficents, double *eqnAMatrix, double *eqnBVector);
+double calculate_z_variance(int points, double *plane_equation_coefficents, double *eqnAMatrix, double *eqnBVector);
+void do_blocking_move_to(float x, float y, float z, float feedrate);
+void do_blocking_move_relative(float offset_x, float offset_y, float offset_z);
+float probe_pt(float x, float y, float z_before);
+void set_feedrate(float new_feedrate);
+void probeEdges(double *eqnAMatrix, double *eqnBVector);
+// TODO: Perhaps we want to make these static again.
+void engage_z_probe();
+void retract_z_probe();
+void run_z_probe();
